@@ -52,9 +52,9 @@ public class MazeMap {
 	 * @inspects | this
 	 * 
 	 * @throws IllegalArgumentException | 0 > rowIndex  
-	 * @throws IllegalArgumentException | rowIndex > getHeight()
+	 * @throws IllegalArgumentException | rowIndex >= getHeight()
 	 * @throws IllegalArgumentException | 0 > columnIndex
-	 * @throws IllegalArgumentException | columnIndex > getWidth()
+	 * @throws IllegalArgumentException | columnIndex >= getWidth()
 	 */	
 	public boolean isPassable(int rowIndex, int columnIndex) { 
 		if (0 > rowIndex) {
