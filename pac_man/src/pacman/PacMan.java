@@ -3,7 +3,7 @@ package pacman;
 /**
  * Each instance of this class represents the player-controlled Pac-Man character in a Pac-Man maze.
  * @invar | getSquare()!= null
- * @invar |	getNbLives() >= 0
+ * @invar | getNbLives() >= 0
  */
 public class PacMan {
 	
@@ -62,7 +62,6 @@ public class PacMan {
 	 * @inspects | square
 	 * @throws IllegalArgumentException | square == null
 	 */
-	
 	public void setSquare(Square square) { 
 		if (square == null) {
 			throw new IllegalArgumentException("`square` is null");}
