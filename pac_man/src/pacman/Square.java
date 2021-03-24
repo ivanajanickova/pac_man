@@ -29,7 +29,7 @@ public class Square {
 	private MazeMap mazeMap;
 	
 	/**
-	 * Stores coordinates a a square as [row, column]
+	 * Stores coordinates of a square as [row, column]
 	 * @representationObject
 	 */
 	private int[] coordinates;
