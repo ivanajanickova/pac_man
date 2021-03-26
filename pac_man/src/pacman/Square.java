@@ -15,6 +15,7 @@ import java.util.HashMap;
  */
 public class Square {
 	
+
 	/**
 	 * @invar | mazeMap != null
 	 * @invar | coordinates[0] >= 0
@@ -75,10 +76,10 @@ public class Square {
 	 */
 	public boolean isPassable() { 
 		if (getRowIndex() < 0) {
-			throw new IllegalArgumentException("`rowIdenx` is smaller than 0");
+			throw new IllegalArgumentException("`rowIndex` is smaller than 0");
 		}
 		if (getColumnIndex() < 0) {
-			throw new IllegalArgumentException("`columnIdenx` is smaller than 0");
+			throw new IllegalArgumentException("`columnIndex` is smaller than 0");
 		}
 		if (getMazeMap() == null) {
 			throw new IllegalArgumentException("`mazeMap` is null");
@@ -191,11 +192,14 @@ public class Square {
 	 * Returns whether the given square refers to the same {@code MazeMap} object and has the same row and column index as this square. 
 	 * 
 	 * @inspects | other
-	 * @throws IllegalArgumentException | other.equals(null)
+	 * @throws IllegalArgumentException | other == null
 	 * 
 	 */
 	public boolean equals(Square other) {
 		
+		if (other == null) {
+			throw new IllegalArgumentException("`other` is null");
+		}
 		int count = 0;
 		if (coordinates[0] == other.getRowIndex() && coordinates[1] == other.getColumnIndex() && 
 				mazeMap.getHeight() == other.getMazeMap().getHeight() && mazeMap.getWidth() == other.getMazeMap().getWidth()) {
@@ -211,7 +215,6 @@ public class Square {
 		}
 		return count == mazeMap.getWidth() * mazeMap.getHeight();
 				
-	}
-	
+	}	
 }
 
