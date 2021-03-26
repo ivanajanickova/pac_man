@@ -37,12 +37,13 @@ public class Ghost {
 	 * @basic
 	 */
 	
-	public Direction getDirection() { 
-		return direction;
+	public Direction getDirection() {
+		return this.direction;
 	}
 	
 	/**
 	 * @inspects | square 
+	 * @inspects | direction
 	 * 
 	 * @throws IllegalArgumentException | square == null 
 	 * @post | square.equals(getSquare())
