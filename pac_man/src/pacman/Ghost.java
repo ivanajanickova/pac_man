@@ -3,22 +3,86 @@ package pacman;
 import java.util.Random;
 
 /**
+ * 
  * Each instance of this class represents a ghost in a Pac-Man maze.
+ * @invar | getSquare()!= null
+ * @invar | getDirection() != null
  */
 public class Ghost {
 	
-	public Square getSquare() { throw new RuntimeException("Not yet implemented"); }
+	/**
+	 * @invar | square != null
+	 * @representationObject
+	 */
+	
+	private Square square;
+	
+	/**
+	 * @invar | direction != null
+	 * @representationObject
+	 */
+	
+	private Direction direction;
+	
+	/**
+	 * @basic
+	 */
+	
+	public Square getSquare() {
+		return Square.of(square.getMazeMap(), square.getRowIndex(), square.getColumnIndex());
+	}
 	
 	/**
 	 * Returns the direction in which this ghost will preferably move next.
+	 * @basic
 	 */
-	public Direction getDirection() { throw new RuntimeException("Not yet implemented"); }
 	
-	public Ghost(Square square, Direction direction) { throw new RuntimeException("Not yet implemented"); }
+	public Direction getDirection() { 
+		return direction;
+	}
 	
-	public void setSquare(Square square) { throw new RuntimeException("Not yet implemented"); }
+	/**
+	 * @inspects | square 
+	 * 
+	 * @throws IllegalArgumentException | square == null 
+	 * @post | square.equals(getSquare())
+	 * 
+	 * @throws IllegalArgumentException | direction == null 
+	 * @post | direction.equals(getDirection())
+	 */
 	
-	public void setDirection(Direction direction) { throw new RuntimeException("Not yet implemented"); }
+	public Ghost(Square square, Direction direction) { 
+		if (square == null) {
+			throw new IllegalArgumentException("`square` is null");}
+		if (direction == null) {
+			throw new IllegalArgumentException("`direction` is null");}
+		
+		this.square = Square.of(square.getMazeMap(), square.getRowIndex(), square.getColumnIndex());
+		this.direction = direction;
+	}
+	
+	/**
+	 * @mutates | this
+	 * @inspects | square
+	 * @throws IllegalArgumentException | square == null
+	 */
+	public void setSquare(Square square) { 
+		if (square == null) {
+			throw new IllegalArgumentException("`square` is null");}
+		this.square = Square.of(square.getMazeMap(), square.getRowIndex(), square.getColumnIndex());
+	}
+	
+	/**
+	 * @mutates | this
+	 * @inspects | direction
+	 * @throws IllegalArgumentException | direction == null
+	 */
+	
+	public void setDirection(Direction direction) { 
+		if (direction == null) {
+			throw new IllegalArgumentException("`direction` is null");}
+		this.direction = direction;
+	}
 	
 	private static int MOVE_FORWARD_PREFERENCE = 10;
 	
