@@ -109,11 +109,11 @@ public class Square {
 	 /**
 	  * @inspects | mazeMap
 	  * 
+	  * @throws IllealArgumentException | mazeMap == null
 	  * @throws IllealArgumentException | rowIndex < 0
 	  * @throws IllealArgumentException | rowIndex >= mazeMap.getHeight()
 	  * @throws IllealArgumentException | columnIndex < 0
 	  * @throws IllealArgumentException | columnIndex >= mazeMap.getWidth()
-	  * @throws IllealArgumentException | mazeMap.equals(null)
 	  * 
 	  * @post | result != null
 	  * @post | result.getRowIndex() == rowIndex
@@ -121,6 +121,9 @@ public class Square {
 	  * @post | result.isPassable() == mazeMap.isPassable(rowIndex, columnIndex) 
 	  */
 	public static Square of(MazeMap mazeMap, int rowIndex, int columnIndex) {
+		if (mazeMap == null) {
+			throw new IllegalArgumentException("`mazeMap` is null");
+		}
 		if (rowIndex < 0 ) {
 			throw new IllegalArgumentException("`rowIndex` is smaller than 0");
 		}
@@ -133,9 +136,6 @@ public class Square {
 		if (columnIndex >= mazeMap.getWidth() ) {
 			throw new IllegalArgumentException("`columnIndex` is out of range");
 		}
-		if (mazeMap.equals(null)) {
-			throw new IllegalArgumentException("`mazeMap` is null");
-		}
 		
 		return new Square(mazeMap, rowIndex, columnIndex);
 	}
@@ -146,6 +146,9 @@ public class Square {
 	 */
 	// No formal documentation required
 	public Square getNeighbor(Direction direction) {
+		if (direction == null) {
+			throw new IllegalArgumentException("`direction` is null");
+		}
 		int[] newCoordinates = coordinates.clone();
 		switch(direction) {
 			case LEFT -> newCoordinates[1] = coordinates[1] - 1 >= 0 ? coordinates[1] - 1 : mazeMap.getWidth() - 1;
@@ -153,7 +156,7 @@ public class Square {
 			case UP -> newCoordinates[0] = coordinates[0] - 1 >= 0 ? coordinates[0] - 1 : mazeMap.getHeight() - 1;
 			case DOWN -> newCoordinates[0] = coordinates[0] + 1 < mazeMap.getHeight() ? coordinates[0] + 1 : 0;
 		}		
-		return new Square(this.getMazeMap(), newCoordinates[0], newCoordinates[1]);
+		return new Square(mazeMap, newCoordinates[0], newCoordinates[1]);
 	}
 
 	/**
@@ -161,6 +164,9 @@ public class Square {
 	 */
 	// No formal documentation required
 	public boolean canMove(Direction direction) {
+		if (direction == null) {
+			throw new IllegalArgumentException("`direction` is null");
+		}
 		return this.getNeighbor(direction).isPassable();
 	}
 	
@@ -171,6 +177,9 @@ public class Square {
 	 */
 	// No formal documentation required
 	public Direction[] getPassableDirectionsExcept(Direction excludedDirection) {
+		if (excludedDirection == null) {
+			throw new IllegalArgumentException("`excludedDirection` is null");
+		}
 		HashMap <Direction, Square> directions = new HashMap<>();
 				directions.put(Direction.LEFT, this.getNeighbor(Direction.LEFT));
 				directions.put(Direction.RIGHT, this.getNeighbor(Direction.RIGHT));
@@ -196,7 +205,6 @@ public class Square {
 	 * 
 	 */
 	public boolean equals(Square other) {
-		
 		if (other == null) {
 			throw new IllegalArgumentException("`other` is null");
 		}

@@ -7,9 +7,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.Test;
 
 import pacman.MazeMap;
-import pacman.PacMan;
 import pacman.Square;
-import pacman.Dot;
 import pacman.Ghost;
 import pacman.Direction;
 
@@ -24,6 +22,9 @@ class GhostTest {
 		Ghost ghost = new Ghost(square, direction);
 		assertEquals(true, Square.of(map, 1, 0).equals(ghost.getSquare()));
 		assertEquals(true, direction.equals(ghost.getDirection()));
+		
+		direction = Direction.UP; //checking if there is cloning of enum necessary
+		assertEquals(Direction.LEFT, ghost.getDirection());
 		
 		Square square2 = Square.of(map, 1, 1);
 		ghost.setSquare(square2);
