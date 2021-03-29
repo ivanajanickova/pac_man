@@ -24,7 +24,6 @@ class SquareTest {
 		assertEquals(true, square.getNeighbor(Direction.UP).equals(Square.of(map, 0, 0)));
 		assertEquals(true, square.canMove(Direction.RIGHT));
 		assertEquals(false, square.canMove(Direction.DOWN));
-		assertArrayEquals(new Direction[] {Direction.RIGHT, Direction.LEFT}, square.getPassableDirectionsExcept(Direction.DOWN));
 		assertArrayEquals(new Direction[] {Direction.LEFT}, square.getPassableDirectionsExcept(Direction.RIGHT));
 		assertEquals(true, square.equals(Square.of(map, 1, 0)));
 		
