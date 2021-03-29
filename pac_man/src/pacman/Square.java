@@ -39,17 +39,7 @@ public class Square {
 	 * @basic
 	 */
 	public MazeMap getMazeMap() { 
-		boolean[] passable = new boolean[mazeMap.getHeight() * mazeMap.getWidth()];
-		int index = 0;
-		for (int i = 0; i < mazeMap.getHeight(); i ++) {
-			for (int j = 0; j < mazeMap.getWidth(); j ++) {
-				passable[index] = mazeMap.isPassable(i, j);
-				index++;
-			}
-		}
-		MazeMap clone = new MazeMap(mazeMap.getWidth(), mazeMap.getHeight(), passable);
-		
-		return clone;
+		return mazeMap;
 		}
 	
 	/**
@@ -92,18 +82,8 @@ public class Square {
 		this.coordinates = new int[2];
 		this.coordinates[0] = rowIndex;
 		this.coordinates[1] = columnIndex;
-		
-		boolean[] passable = new boolean[mazeMap.getHeight() * mazeMap.getWidth()];
-		int index = 0;
-		for (int i = 0; i < mazeMap.getHeight(); i ++) {
-			for (int j = 0; j < mazeMap.getWidth(); j ++) {
-				passable[index] = mazeMap.isPassable(i, j);
-				index ++;
-			}
-		}
-		
-		MazeMap clone = new MazeMap(mazeMap.getWidth(), mazeMap.getHeight(), passable);
-		this.mazeMap = clone;
+	
+		this.mazeMap = mazeMap;
 	}
 	
 	 /**
@@ -118,6 +98,7 @@ public class Square {
 	  * @post | result != null
 	  * @post | result.getRowIndex() == rowIndex
 	  * @post | result.getColumnIndex() == columnIndex
+	  * @post | result.getMazeMap() == mazeMap
 	  * @post | result.isPassable() == mazeMap.isPassable(rowIndex, columnIndex) 
 	  */
 	public static Square of(MazeMap mazeMap, int rowIndex, int columnIndex) {
@@ -136,7 +117,7 @@ public class Square {
 		if (columnIndex >= mazeMap.getWidth() ) {
 			throw new IllegalArgumentException("`columnIndex` is out of range");
 		}
-		
+				
 		return new Square(mazeMap, rowIndex, columnIndex);
 	}
 
