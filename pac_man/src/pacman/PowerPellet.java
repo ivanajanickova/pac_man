@@ -8,7 +8,7 @@ package pacman;
  * 
  * @immutable
  */
-public class Dot extends FoodItem{
+public class PowerPellet extends FoodItem {
 	
 	/**
 	 * @invar | square != null
@@ -26,7 +26,7 @@ public class Dot extends FoodItem{
 	 * 
 	 * @post | getSquare() == square
 	 */
-	public Dot(Square square) {
+	public PowerPellet(Square square) {
 		if (square == null)
 			throw new IllegalArgumentException("`square` is null");
 		
@@ -38,5 +38,4 @@ public class Dot extends FoodItem{
 		// TODO Auto-generated method stub
 		return 0;
 	}
-
 }
