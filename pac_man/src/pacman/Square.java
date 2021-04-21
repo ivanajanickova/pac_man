@@ -1,209 +1,133 @@
 package pacman;
 
-import java.util.HashMap;
+import java.util.Arrays;
 
 /**
  * Each instance of this class represents a position in a maze, specified by a row index and a column index.
  * The top row and the leftmost column have index 0.
  * 
- * @immutable
- * 
- * @invar | getRowIndex() >= 0
- * @invar | getRowIndex() < getMazeMap().getHeight()
- * @invar | getColumnIndex() >= 0
  * @invar | getMazeMap() != null
+ * @invar | 0 <= getRowIndex()
+ * @invar | getRowIndex() < getMazeMap().getHeight()
+ * @invar | 0 <= getColumnIndex()
+ * @invar | getColumnIndex() < getMazeMap().getWidth()
+ * 
+ * @immutable
  */
 public class Square {
 	
-
 	/**
 	 * @invar | mazeMap != null
-	 * @invar | coordinates[0] >= 0
-	 * @invar | coordinates[0] < mazeMap.getHeight()
-	 * @invar | coordinates[1] >= 0
-	 * @invar | coordinates[1] < mazeMap.getWidth()
+	 * @invar | 0 <= rowIndex
+	 * @invar | rowIndex < mazeMap.getHeight()
+	 * @invar | 0 <= columnIndex
+	 * @invar | columnIndex < mazeMap.getWidth()
 	 */
-	
-	/**
-	 * @represetantionObject
-	 */
-	private MazeMap mazeMap;
-	
-	/**
-	 * Stores coordinates of a square as [row, column]
-	 * @representationObject
-	 */
-	private int[] coordinates;
+	private final MazeMap mazeMap;
+	private final int rowIndex;
+	private final int columnIndex;
 	
 	/**
 	 * @basic
 	 */
-	public MazeMap getMazeMap() { 
-		return mazeMap;
-		}
+	public MazeMap getMazeMap() { return mazeMap; }
 	
 	/**
-	 * @post | result < getMazeMap().getHeight()
+	 * @basic
 	 */
-	public int getRowIndex() { 
-		return coordinates[0];
-		}
+	public int getRowIndex() { return rowIndex; }
 	
 	/**
-	 * @post | result < getMazeMap().getWidth()
+	 * @basic
 	 */
-	public int getColumnIndex() { 
-		return coordinates[1];
-		}
+	public int getColumnIndex() { return columnIndex; }
 	
 	/**
-	 * @inspects | this
-	 * 
-	 * @throws IllealArgumentException | getRowIndex() < 0
-	 * @throws IllealArgumentException | getColumnIndex() < 0
-	 * @throws IllealArgumentException | getMazeMap() == null
-	 * 
+	 * @post | result == getMazeMap().isPassable(getRowIndex(), getColumnIndex())
 	 */
-	public boolean isPassable() { 
-		if (getRowIndex() < 0) {
-			throw new IllegalArgumentException("`rowIndex` is smaller than 0");
-		}
-		if (getColumnIndex() < 0) {
-			throw new IllegalArgumentException("`columnIndex` is smaller than 0");
-		}
-		if (getMazeMap() == null) {
-			throw new IllegalArgumentException("`mazeMap` is null");
-		}
-		return this.mazeMap.isPassable(this.coordinates[0], this.coordinates[1]);
-		}
+	public boolean isPassable() { return mazeMap.isPassable(rowIndex, columnIndex); }
 	
-
 	private Square(MazeMap mazeMap, int rowIndex, int columnIndex) {
-		this.coordinates = new int[2];
-		this.coordinates[0] = rowIndex;
-		this.coordinates[1] = columnIndex;
-	
+		if (mazeMap == null)
+			throw new IllegalArgumentException("`mazeMap` must not be null");
+		if (rowIndex < 0)
+			throw new IllegalArgumentException("`rowIndex` must not be negative");
+		if (mazeMap.getHeight() <= rowIndex)
+			throw new IllegalArgumentException("`rowIndex` must be less than the height of the maze map");
+		if (columnIndex < 0)
+			throw new IllegalArgumentException("`columnIndex` must not be negative");
+		if (mazeMap.getWidth() <= columnIndex)
+			throw new IllegalArgumentException("`columnIndex` must be less than the width of the maze map");
+		
 		this.mazeMap = mazeMap;
+		this.rowIndex = rowIndex;
+		this.columnIndex = columnIndex;
 	}
-	
-	 /**
-	  * @inspects | mazeMap
-	  * 
-	  * @throws IllealArgumentException | mazeMap == null
-	  * @throws IllealArgumentException | rowIndex < 0
-	  * @throws IllealArgumentException | rowIndex >= mazeMap.getHeight()
-	  * @throws IllealArgumentException | columnIndex < 0
-	  * @throws IllealArgumentException | columnIndex >= mazeMap.getWidth()
-	  * 
-	  * @post | result != null
-	  * @post | result.getRowIndex() == rowIndex
-	  * @post | result.getColumnIndex() == columnIndex
-	  * @post | result.getMazeMap() == mazeMap
-	  * @post | result.isPassable() == mazeMap.isPassable(rowIndex, columnIndex) 
-	  */
+
+	/**
+	 * Initializes this object so that it represents the position in the given maze map
+	 * specified by the given row index and column index.
+	 * 
+	 * @throws IllegalArgumentException | mazeMap == null
+	 * @throws IllegalArgumentException | rowIndex < 0
+	 * @throws IllegalArgumentException | mazeMap.getHeight() <= rowIndex
+	 * @throws IllegalArgumentException | columnIndex < 0
+	 * @throws IllegalArgumentException | mazeMap.getWidth() <= columnIndex
+	 * 
+	 * @post | result != null
+	 * @post | result.getMazeMap() == mazeMap
+	 * @post | result.getRowIndex() == rowIndex
+	 * @post | result.getColumnIndex() == columnIndex
+	 */
 	public static Square of(MazeMap mazeMap, int rowIndex, int columnIndex) {
-		if (mazeMap == null) {
-			throw new IllegalArgumentException("`mazeMap` is null");
-		}
-		if (rowIndex < 0 ) {
-			throw new IllegalArgumentException("`rowIndex` is smaller than 0");
-		}
-		if (rowIndex >= mazeMap.getHeight()  ) {
-			throw new IllegalArgumentException("`rowIndex` is out of range");
-		}
-		if (columnIndex < 0) {
-			throw new IllegalArgumentException("`columnIndex` is smaller than 0");
-		}
-		if (columnIndex >= mazeMap.getWidth() ) {
-			throw new IllegalArgumentException("`columnIndex` is out of range");
-		}
-				
 		return new Square(mazeMap, rowIndex, columnIndex);
 	}
-
-	/**
-	 * Returns this square's neighbor in the given direction.
-	 * If this square has no neighbor in the given direction, return the square that is furthest away in the opposite direction.
-	 */
-	// No formal documentation required
+	
+	// No formal documentation required.
 	public Square getNeighbor(Direction direction) {
-		if (direction == null) {
-			throw new IllegalArgumentException("`direction` is null");
+		int rowIndex = this.rowIndex;
+		int columnIndex = this.columnIndex;
+		switch (direction) {
+		case RIGHT -> columnIndex = (columnIndex + 1) % mazeMap.getWidth();
+		case LEFT -> columnIndex = Math.floorMod(columnIndex - 1, mazeMap.getWidth());
+		case DOWN -> rowIndex = (rowIndex + 1) % mazeMap.getHeight();
+		case UP -> rowIndex = Math.floorMod(rowIndex - 1, mazeMap.getHeight());
 		}
-		int[] newCoordinates = coordinates.clone();
-		switch(direction) {
-			case LEFT -> newCoordinates[1] = coordinates[1] - 1 >= 0 ? coordinates[1] - 1 : mazeMap.getWidth() - 1;
-			case RIGHT -> newCoordinates[1] = coordinates[1] + 1 < mazeMap.getWidth() ? coordinates[1] + 1 : 0;	
-			case UP -> newCoordinates[0] = coordinates[0] - 1 >= 0 ? coordinates[0] - 1 : mazeMap.getHeight() - 1;
-			case DOWN -> newCoordinates[0] = coordinates[0] + 1 < mazeMap.getHeight() ? coordinates[0] + 1 : 0;
-		}		
-		return new Square(mazeMap, newCoordinates[0], newCoordinates[1]);
+		return Square.of(mazeMap, rowIndex, columnIndex);
 	}
-
-	/**
-	 * Returns whether this square's neighbor in the given direction is passable.
-	 */
-	// No formal documentation required
+	
+	// No formal documentation required.
 	public boolean canMove(Direction direction) {
-		if (direction == null) {
-			throw new IllegalArgumentException("`direction` is null");
-		}
-		return this.getNeighbor(direction).isPassable();
+		return getNeighbor(direction).isPassable();
 	}
 	
-
-	/**
-	 * Returns the directions that are different from the given excluded direction and such that the neighbor in that direction is passable.
-	 * The returned array shall have no null elements and shall have no duplicates.
-	 */
-	// No formal documentation required
+	// No formal documentation required.
 	public Direction[] getPassableDirectionsExcept(Direction excludedDirection) {
-		if (excludedDirection == null) {
-			throw new IllegalArgumentException("`excludedDirection` is null");
-		}
-		HashMap <Direction, Square> directions = new HashMap<>();
-				directions.put(Direction.LEFT, this.getNeighbor(Direction.LEFT));
-				directions.put(Direction.RIGHT, this.getNeighbor(Direction.RIGHT));
-				directions.put(Direction.UP, this.getNeighbor(Direction.UP));
-				directions.put(Direction.DOWN, this.getNeighbor(Direction.DOWN));
-		
-		Direction[] directionsArray = new Direction[] {Direction.LEFT, Direction.RIGHT, Direction.DOWN, Direction.UP};
-		
-		for (Direction d : directionsArray) {
-			if (!directions.get(d).isPassable() || d.equals(excludedDirection)) {
-				directions.remove(d);
-			}
-		}
-		return directions.keySet().toArray(new Direction[directions.keySet().size()]);
+		Direction[] result = new Direction[4];
+		int nbDirections = 0;
+		for (Direction direction : Direction.values())
+			if (direction != excludedDirection && canMove(direction))
+				result[nbDirections++] = direction;
+		return Arrays.copyOf(result, nbDirections);
 	}
-	
 
 	/**
-	 * Returns whether the given square refers to the same {@code MazeMap} object and has the same row and column index as this square. 
+	 * Returns whether this object represents the same position in the same maze map as the given object.
 	 * 
-	 * @inspects | other
 	 * @throws IllegalArgumentException | other == null
 	 * 
+	 * @post | result == (
+	 *       |     getMazeMap() == other.getMazeMap() &&
+	 *       |     getRowIndex() == other.getRowIndex() &&
+	 *       |     getColumnIndex() == other.getColumnIndex()
+	 *       | ) 
 	 */
 	public boolean equals(Square other) {
-		if (other == null) {
-			throw new IllegalArgumentException("`other` is null");
-		}
-		int count = 0;
-		if (coordinates[0] == other.getRowIndex() && coordinates[1] == other.getColumnIndex() && 
-				mazeMap.getHeight() == other.getMazeMap().getHeight() && mazeMap.getWidth() == other.getMazeMap().getWidth()) {
-			
-			//checking if the two MazeMaps of Squares are equal (same `passable` pattern)
-			for (int i = 0; i < mazeMap.getHeight(); i ++) {
-				for (int j = 0; j < mazeMap.getWidth(); j ++) {
-					if(mazeMap.isPassable(i, j) == other.getMazeMap().isPassable(i, j)) {
-						count ++;
-					}
-				}
-			}
-		}
-		return count == mazeMap.getWidth() * mazeMap.getHeight();
-				
-	}	
+		if (other == null)
+			throw new IllegalArgumentException("`other` must not be null");
+		
+		return mazeMap == other.mazeMap && rowIndex == other.rowIndex && columnIndex == other.columnIndex;
+	}
+	
 }
 
