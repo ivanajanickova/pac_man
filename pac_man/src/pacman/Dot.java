@@ -1,41 +1,35 @@
 package pacman;
 
 /**
- * Each instance of this class represents a dot (a piece of food for Pac-Man) in a Pac-Man maze.
- * @immutable 
+ * Each instance of this class represents a dot, located at a fixed position in a Pac-Man maze.
+ * A dot serves as the food for Pac-Man.
  * 
  * @invar | getSquare() != null
  * 
+ * @immutable
  */
 public class Dot {
 	
 	/**
 	 * @invar | square != null
-	 * 
-	 * @representationObject
 	 */
 	private Square square;
 	
 	/**
 	 * @basic
 	 */
-	public Square getSquare() { 
-		return Square.of(square.getMazeMap(), square.getRowIndex(), square.getColumnIndex()); 
-	}
-	
+	public Square getSquare() { return square; }
 	
 	/**
-	 * @inspects | square
-	 * 
 	 * @throws IllegalArgumentException | square == null
 	 * 
-	 * @post | getSquare().equals(square)
+	 * @post | getSquare() == square
 	 */
-	public Dot(Square square) { 
-		if (square == null) {
-			throw new IllegalArgumentException("`square` is null.");
-		}
-		this.square = Square.of(square.getMazeMap(), square.getRowIndex(), square.getColumnIndex()); 
+	public Dot(Square square) {
+		if (square == null)
+			throw new IllegalArgumentException("`square` is null");
+		
+		this.square = square;
 	}
 
 }

@@ -1,89 +1,77 @@
 package pacman;
 
 /**
- * Each instance of this class represents the player-controlled Pac-Man character in a Pac-Man maze.
- * @invar | getSquare()!= null
- * @invar | getNbLives() >= 0
+ * Each instance of this class represents the Pac-Man character in a Pac-Man maze.
+ * 
+ * @invar | 0 <= getNbLives()
+ * @invar | getSquare() != null
  */
 public class PacMan {
 	
 	/**
-	 * @invar | nbLives >=0
-	 * @invar | square != null
+	 * @invar | 0 <= nbLives
+	 * @invar | square != null 
 	 */
-	
-	/**
-	 *
-	 * @representationObject
-	 */
+	private int nbLives;
 	private Square square;
 	
-	private int nbLives;
-	
 	/**
-	 * Returns the current square where the maze is found.
 	 * @basic
 	 */
-	public Square getSquare() { 
-		return Square.of(square.getMazeMap(), square.getRowIndex(), square.getColumnIndex()); 
+	public int getNbLives() {
+		return nbLives;
 	}
+	
+	/**
+	 * @basic
+	 */
+	public Square getSquare() { return square; }
 
-	
 	/**
-	 * Returns the current number of lives that the maze has left.
-	 * @basic
-	 */
-	public int getNbLives() { 
-		return nbLives; 
-	}
-	
-	/**
-	 * @inspects | square 
+	 * Initializes this object so that its initial position is the
+	 * given square and its initial number of lives equals the given
+	 * number of lives.
 	 * 
-	 * @throws IllegalArgumentException | square == null 
-	 * @throws IllegalArgumentExveption | nbLives < 0
+	 * @throws | nbLives < 0
+	 * @throws | square == null
 	 * 
-	 * @post | nbLives >=0 //this is a precondition
-	 * @post | nbLives == getNbLives()
-	 * @post | square.equals(getSquare())
+	 * @post | getNbLives() == nbLives
+	 * @post | getSquare() == square
 	 */
 	public PacMan(int nbLives, Square square) {
-		if (square == null) {
-			throw new IllegalArgumentException("`square` is null");}
-		if (nbLives < 0) {
-			throw new IllegalArgumentException("`nbLives` is a negative number");}
-
-		this.nbLives= nbLives;
-		this.square = Square.of(square.getMazeMap(), square.getRowIndex(), square.getColumnIndex());
+		this.nbLives = nbLives;
+		this.square = square;
 	}
 	
 	/**
-	 * @mutates | this
-	 * @inspects | square
+	 * Sets this object's position.
+	 * 
 	 * @throws IllegalArgumentException | square == null
-	 */
-	public void setSquare(Square square) { 
-		if (square == null) {
-			throw new IllegalArgumentException("`square` is null");}
-		this.square = Square.of(square.getMazeMap(), square.getRowIndex(), square.getColumnIndex());
-		
-
-	}
-	
-	/**
-	 * Decreases this Pac-Man character's number of lives by one.
+	 * 
 	 * @mutates | this
 	 * 
-	 * @throws IllegalArgumentException | getNbLives() < 1
+	 * @post | getSquare() == square
+	 * @post | getNbLives() == old(getNbLives()) 
+	 */
+	public void setSquare(Square square) {
+		this.square = square;
+	}
+	
+	/**
+	 * Decreases this object's number of lives.
+	 * 
+	 * @throws IllegalStateException | getNbLives() == 0
+	 * 
+	 * @mutates | this
 	 * 
 	 * @post | getNbLives() == old(getNbLives()) - 1
+	 * @post | getSquare() == old(getSquare())
 	 */
-	public void die() { 
-		if (nbLives < 1) {
-			throw new IllegalArgumentException("`nbLives` is 0");}
-		this.nbLives = nbLives - 1;
+	public void die() {
+		if (nbLives == 0)
+			throw new IllegalStateException("no lives left");
 		
+		this.nbLives--;
 	}
-
 
 }
