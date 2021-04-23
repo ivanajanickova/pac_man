@@ -2,6 +2,7 @@ package pacman;
 
 import java.util.Arrays;
 import java.util.Random;
+import java.util.stream.IntStream;
 
 public class Maze {
 	
@@ -44,7 +45,10 @@ public class Maze {
 	}
 	
 	private void removeFoodItemAtIndex(int index) {
-		FoodItem[] newFoodItem = new Dot[foodItems.length - 1];
+		if (foodItems[index].isPowerPellet()) {
+			IntStream.range(0, ghosts.length-1).forEach(n -> ghosts[n].pacManAtePowerPellet());
+		}
+		FoodItem[] newFoodItem = new FoodItem[foodItems.length - 1];
 		System.arraycopy(foodItems, 0, newFoodItem, 0, index);
 		System.arraycopy(foodItems, index + 1, newFoodItem, index, newFoodItem.length - index);
 		foodItems = newFoodItem;

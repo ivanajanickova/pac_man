@@ -35,7 +35,11 @@ public class PowerPellet extends FoodItem {
 
 	@Override
 	public int getSize() {
-		// TODO Auto-generated method stub
-		return 0;
+		return 2;
+	}
+
+	@Override
+	public boolean isPowerPellet() {
+		return true;
 	}
 }

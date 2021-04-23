@@ -8,7 +8,7 @@ package pacman;
  * 
  * @immutable
  */
-public class Dot extends FoodItem{
+public class Dot extends FoodItem {
 	
 	/**
 	 * @invar | square != null
@@ -35,8 +35,12 @@ public class Dot extends FoodItem{
 
 	@Override
 	public int getSize() {
-		// TODO Auto-generated method stub
-		return 0;
+		return 1;
+	}
+
+	@Override
+	public boolean isPowerPellet() {
+		return false;
 	}
 
 }
