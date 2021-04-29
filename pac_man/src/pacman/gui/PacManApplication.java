@@ -17,6 +17,7 @@ public class PacManApplication {
 			frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 			frame.setVisible(true);
 		});
+		
 	}
 
 }
