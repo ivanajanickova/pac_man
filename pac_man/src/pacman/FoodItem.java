@@ -9,3 +9,4 @@ public abstract class FoodItem {
 	public abstract int getSize();
 	
 }
+

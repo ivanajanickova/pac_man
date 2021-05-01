@@ -8,7 +8,7 @@ public class VulnerableGhostState extends GhostState {
 	private int count = 0;
 	
 	@Override
-	public boolean isVunerable() {
+	public boolean isVulnerable() {
 		return true;
 	}
 
