@@ -5,10 +5,10 @@ import java.util.Random;
 public class VulnerableGhostState extends GhostState {
 	
 	private int moveDelay = 1;
-	private int count = 0;
+	private int count = 1;
 	
 	@Override
-	public boolean isVunerable() {
+	public boolean isVulnerable() {
 		return true;
 	}
 
@@ -18,7 +18,6 @@ public class VulnerableGhostState extends GhostState {
 		if(count <= 6) {
 			if (moveDelay == 1) {
 				moveDelay = 0;
-				count ++;
 				return;
 			}
 			else {
@@ -31,6 +30,12 @@ public class VulnerableGhostState extends GhostState {
 		else {
 			ghost.setGhostState(new RegularGhostState());
 		}
+	}
+
+	@Override
+	public GhostState hitBy(Ghost ghost, PacMan pacMan) {
+		ghost.setSquare(ghost.getOriginalSquare());
+		return new RegularGhostState(); 
 	}
 	
 

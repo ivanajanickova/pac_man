@@ -22,6 +22,7 @@ import pacman.Ghost;
 import pacman.Maze;
 import pacman.MazeDescriptions;
 import pacman.MazeMap;
+import pacman.PowerPellet;
 
 public class MazeView extends JPanel {
 	
