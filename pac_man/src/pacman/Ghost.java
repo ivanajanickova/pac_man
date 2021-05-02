@@ -39,7 +39,7 @@ public class Ghost {
 	public void setGhostState(GhostState state) {this.ghostState = state;}
 	
 	void hitBy(PacMan pacMan) {
-		ghostState = ghostState.hitBy(this, pacMan);
+		setGhostState(ghostState.hitBy(this, pacMan));
 	}
 	
 	public void pacManAtePowerPellet() {
