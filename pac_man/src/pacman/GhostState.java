@@ -8,8 +8,6 @@ public abstract class GhostState {
 	
 	public abstract void move(Ghost ghost, Random random);
 	
-	public GhostState hitBy(Ghost ghost, PacMan pacMan) {
-		return this.hitBy(ghost, pacMan);
-	}
+	public abstract GhostState hitBy(Ghost ghost, PacMan pacMan);
 
 }

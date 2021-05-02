@@ -32,6 +32,12 @@ public class VulnerableGhostState extends GhostState {
 			ghost.setGhostState(new RegularGhostState());
 		}
 	}
+
+	@Override
+	public GhostState hitBy(Ghost ghost, PacMan pacMan) {
+		ghost.setSquare(ghost.getOriginalSquare());
+		return new RegularGhostState();
+	}
 	
 
 }

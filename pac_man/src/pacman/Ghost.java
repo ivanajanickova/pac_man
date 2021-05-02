@@ -20,11 +20,13 @@ public class Ghost {
 	private Square originalSquare;
 	private Square square;
 	private Direction direction;
-	private GhostState ghostState;
+	private GhostState ghostState = new RegularGhostState();
 	/**
 	 * @basic
 	 */
 	public Square getSquare() { return square; }
+	
+	public Square getOriginalSquare() { return originalSquare; }
 
 	/**
 	 * @basic
@@ -37,11 +39,7 @@ public class Ghost {
 	public void setGhostState(GhostState state) {this.ghostState = state;}
 	
 	void hitBy(PacMan pacMan) {
-		if (this.ghostState.isVulnerable()==false)
-			pacMan.die();
-		else
-			this.setSquare(originalSquare);
-			this.setGhostState(new RegularGhostState());
+		ghostState = ghostState.hitBy(this, pacMan);
 	}
 	
 	public void pacManAtePowerPellet() {
@@ -64,7 +62,7 @@ public class Ghost {
 		if (square == null)
 			throw new IllegalArgumentException("`square` is null");
 		if (originalSquare == null)
-			originalSquare = square; // clone?
+			originalSquare = square;
 		if (direction == null)
 			throw new IllegalArgumentException("`direction` is null");
 		

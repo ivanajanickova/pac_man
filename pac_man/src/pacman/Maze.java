@@ -20,7 +20,7 @@ public class Maze {
 	
 	public FoodItem[] getFoodItems() { return foodItems.clone(); }
 	
-	public Maze(Random random, MazeMap map, PacMan pacMan, Ghost[] ghosts, FoodItem[] foodItemss) {
+	public Maze(Random random, MazeMap map, PacMan pacMan, Ghost[] ghosts, FoodItem[] foodItems) {
 		this.random = random;
 		this.map = map;
 		this.pacMan = pacMan;
@@ -46,7 +46,7 @@ public class Maze {
 	
 	private void removeFoodItemAtIndex(int index) {
 		if (foodItems[index].isPowerPellet()) {
-			IntStream.range(0, ghosts.length-1).forEach(n -> ghosts[n].pacManAtePowerPellet());
+			IntStream.range(0, ghosts.length).forEach(n -> ghosts[n].pacManAtePowerPellet());
 		}
 		FoodItem[] newFoodItem = new FoodItem[foodItems.length - 1];
 		System.arraycopy(foodItems, 0, newFoodItem, 0, index);

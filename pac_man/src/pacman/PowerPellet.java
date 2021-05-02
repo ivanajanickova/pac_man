@@ -31,7 +31,8 @@ public class PowerPellet extends FoodItem {
 			throw new IllegalArgumentException("`square` is null");
 		this.square = square;
 	}
-
+	
+	@Override
 	public int getSize() {
 		return 2;
 	}

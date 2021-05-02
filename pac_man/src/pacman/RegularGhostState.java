@@ -13,5 +13,11 @@ public class RegularGhostState extends GhostState {
 	public void move(Ghost ghost, Random random) {
 		ghost.reallyMove(random);		
 	}
+
+	@Override
+	public GhostState hitBy(Ghost ghost, PacMan pacMan) {
+		pacMan.die();
+		return this;
+	}
 	
 }
