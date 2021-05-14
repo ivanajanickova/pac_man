@@ -12,40 +12,28 @@ import java.util.Random;
 public class Ghost {
 	
 	/**
+	 * @invar | originalSquare != null
 	 * @invar | square != null
 	 * @invar | direction != null
-	 * @invar | originalSquare != null
-	 * @invar | ghostState != null
 	 */
-	private Square originalSquare;
+	private final Square originalSquare;
 	private Square square;
 	private Direction direction;
-	private GhostState ghostState = new RegularGhostState();
+	private GhostState state = new RegularGhostState();
+	
+	public boolean isVulnerable() { return state.isVulnerable(); }
+
+	public Square getOriginalSquare() { return originalSquare; }
+	
 	/**
 	 * @basic
 	 */
 	public Square getSquare() { return square; }
-	
-	public Square getOriginalSquare() { return originalSquare; }
 
 	/**
 	 * @basic
 	 */
 	public Direction getDirection() { return direction; }
-	
-	public boolean isVulnerable() {return ghostState.isVulnerable();}
-	
-	
-	public void setGhostState(GhostState state) {this.ghostState = state;}
-	
-	void hitBy(PacMan pacMan) {
-		setGhostState(ghostState.hitBy(this, pacMan));
-	}
-	
-	public void pacManAtePowerPellet() {
-		this.direction = direction.getOpposite();
-		this.ghostState = new VulnerableGhostState();
-	}
 	
 	/**
 	 * Initializes this object so that its initial position is the
@@ -61,12 +49,10 @@ public class Ghost {
 	public Ghost(Square square, Direction direction) {
 		if (square == null)
 			throw new IllegalArgumentException("`square` is null");
-		if (originalSquare == null)
-			originalSquare = square;
 		if (direction == null)
 			throw new IllegalArgumentException("`direction` is null");
 		
-		this.square = square;
+		this.square = this.originalSquare = square;
 		this.direction = direction;
 	}
 	
@@ -119,12 +105,21 @@ public class Ghost {
 	}
 	
 	// No formal documentation required.
+	public void move(Random random) {
+		state = state.move(this, random);
+	}
+	
 	public void reallyMove(Random random) {
 		setDirection(chooseNextMoveDirection(random));
 		setSquare(getSquare().getNeighbor(getDirection()));
 	}
-	
-	public void move(Random random) {
-		ghostState.move(this, random);
+
+	public void pacManAtePowerPellet() {
+		direction = direction.getOpposite();
+		state = new VulnerableGhostState();
+	}
+
+	public void hitBy(PacMan pacMan) {
+		state = state.hitBy(this, pacMan);
 	}
 }

@@ -2,38 +2,46 @@ package pacman.tests;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-
-
 import org.junit.jupiter.api.Test;
 
-import pacman.MazeMap;
-import pacman.Square;
-import pacman.Ghost;
 import pacman.Direction;
+import pacman.Ghost;
+import pacman.MazeMap;
+import pacman.PacMan;
+import pacman.Square;
 
 class GhostTest {
 
-	@Test
-	void test() {
-		MazeMap map = new MazeMap(3, 2, new boolean[] {false, true, true, false, true, true});
-		Square square = Square.of(map, 1, 0);
-		Direction direction = Direction.LEFT;
-		
-		Ghost ghost = new Ghost(square, direction);
-		assertEquals(true, Square.of(map, 1, 0).equals(ghost.getSquare()));
-		assertEquals(true, direction.equals(ghost.getDirection()));
-		
-		direction = Direction.UP; //checking if there is cloning of enum necessary
-		assertEquals(Direction.LEFT, ghost.getDirection());
-		
-		Square square2 = Square.of(map, 1, 1);
-		ghost.setSquare(square2);
-		assertEquals(true, ghost.getSquare().equals(square2));
-		
-		Direction direction2 = Direction.RIGHT;
-		ghost.setDirection(direction2);
-		assertEquals(true, ghost.getDirection().equals(direction2));
+ 	MazeMap mazeMap = new MazeMap(4, 3, new boolean[] {
+		true, false, true, true,
+		true, true, false, true,
+		false, true, true, true
+ 	});
+	Ghost ghost = new Ghost(Square.of(mazeMap, 2, 1), Direction.DOWN);
 
+ 	@Test
+	void testGhost() {
+		assertTrue(Square.of(mazeMap, 2, 1).equals(ghost.getSquare()));
+		assertEquals(Direction.DOWN, ghost.getDirection());
+		ghost.setSquare(Square.of(mazeMap, 2, 2));
+		assertTrue(Square.of(mazeMap, 2, 2).equals(ghost.getSquare()));
+		ghost.setDirection(Direction.RIGHT);
+		assertEquals(Direction.RIGHT, ghost.getDirection());
+ 	}
+ 	
+ 	@Test
+ 	void testPacManAtePowerPellet() {
+ 		ghost.pacManAtePowerPellet();
+ 		assert ghost.isVulnerable();
+ 		assert ghost.getDirection() == Direction.UP;
+ 	}
+ 	
+ 	@Test
+ 	void testHitBy() {
+ 		PacMan pacMan = new PacMan(3, Square.of(mazeMap, 2, 1));
+ 		assert pacMan.getNbLives() == 3;
+ 		ghost.hitBy(pacMan);
+ 		assert pacMan.getNbLives() == 2;
+ 	}
 
-	}
 }
