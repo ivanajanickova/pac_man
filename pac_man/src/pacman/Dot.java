@@ -11,36 +11,15 @@ package pacman;
 public class Dot extends FoodItem {
 	
 	/**
-	 * @invar | square != null
+	 * @post | result == 1
 	 */
-	private Square square;
-	
-	/**
-	 * @basic
-	 */
-	@Override
-	public Square getSquare() { return square; }
-	
-	/**
-	 * @throws IllegalArgumentException | square == null
-	 * 
-	 * @post | getSquare() == square
-	 */
-	public Dot(Square square) {
-		if (square == null)
-			throw new IllegalArgumentException("`square` is null");
-		
-		this.square = square;
-	}
-
 	@Override
 	public int getSize() {
 		return 1;
 	}
 
-	@Override
-	public boolean isPowerPellet() {
-		return false;
+	public Dot(Square square) {
+		super(square);
 	}
 
 }

@@ -2,7 +2,6 @@ package pacman;
 
 import java.util.Arrays;
 import java.util.Random;
-import java.util.stream.IntStream;
 
 public class Maze {
 	
@@ -44,20 +43,23 @@ public class Maze {
 		checkPacManDamage();
 	}
 	
-	private void removeFoodItemAtIndex(int index) {
-		if (foodItems[index].isPowerPellet()) {
-			IntStream.range(0, ghosts.length).forEach(n -> ghosts[n].pacManAtePowerPellet());
-		}
-		FoodItem[] newFoodItem = new FoodItem[foodItems.length - 1];
-		System.arraycopy(foodItems, 0, newFoodItem, 0, index);
-		System.arraycopy(foodItems, index + 1, newFoodItem, index, newFoodItem.length - index);
-		foodItems = newFoodItem;
+	public void pacManAtePowerPellet() {
+		for (Ghost ghost : ghosts)
+			ghost.pacManAtePowerPellet();
 	}
 	
-	private void removeFoodItemAtSquare(Square square) {
+	private void removeFoodItemsAtIndex(int index) {
+		FoodItem[] newFoodItems = new FoodItem[foodItems.length - 1];
+		System.arraycopy(foodItems, 0, newFoodItems, 0, index);
+		System.arraycopy(foodItems, index + 1, newFoodItems, index, newFoodItems.length - index);
+		foodItems = newFoodItems;
+	}
+	
+	private void checkFoodItemCollision(Square square) {
 		for (int i = 0; i < foodItems.length; i++) {
 			if (foodItems[i].getSquare().equals(square)) {
-				removeFoodItemAtIndex(i);
+				foodItems[i].eatenByPacMan(this);
+				removeFoodItemsAtIndex(i);
 				return;
 			}
 		}
@@ -67,7 +69,7 @@ public class Maze {
 		Square newSquare = pacMan.getSquare().getNeighbor(direction);
 		if (newSquare.isPassable()) {
 			pacMan.setSquare(newSquare);
-			removeFoodItemAtSquare(newSquare);
+			checkFoodItemCollision(newSquare);
 			checkPacManDamage();
 		}
 	}

@@ -101,16 +101,3 @@ public class MazeMap {
 	}
 	
 }
-
-
-
-
-
-
-
-
-
-
-
-
-

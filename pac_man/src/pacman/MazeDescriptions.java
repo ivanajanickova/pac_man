@@ -22,7 +22,7 @@ public class MazeDescriptions {
 		
 		int nbGhosts = 0;
 		Ghost[] ghosts = new Ghost[width * height];
-				
+		
 		for (int row = 0; row < lines.length; row++) {
 			String line = lines[row];
 			for (int column = 0; column < line.length(); column++) {
@@ -31,9 +31,7 @@ public class MazeDescriptions {
 					passable[row * width + column] = false;
 			}
 		}
-				
 		MazeMap map = new MazeMap(width, height, passable);
-		
 		
 		PacMan pacMan = null;
 		for (int row = 0; row < lines.length; row++) {
@@ -44,16 +42,15 @@ public class MazeDescriptions {
 				case ' ' -> {}
 				case '#' -> {}
 				case '.' -> foodItems[nbFoodItems++] = new Dot(Square.of(map, row, column));
+				case 'p' -> foodItems[nbFoodItems++] = new PowerPellet(Square.of(map, row, column));
 				case 'G' -> ghosts[nbGhosts++] = new Ghost(Square.of(map, row, column), Direction.values()[random.nextInt(Direction.values().length)]);
 				case 'P' -> {
 					if (pacMan != null)
 						throw new IllegalArgumentException("Maze description contains multiple P characters");
 					pacMan = new PacMan(3, Square.of(map, row, column));
 				}
-				case 'p' -> foodItems[nbFoodItems++] = new PowerPellet(Square.of(map, row, column));
 				default -> throw new IllegalArgumentException("Invalid character in maze description: " + c);
 				}
-							
 			}
 		}
 		
