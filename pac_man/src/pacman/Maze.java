@@ -68,7 +68,7 @@ public class Maze {
 	 * @mutates | this
 	 * @post | getWormholes().equals(LogicalSet.plus(old(getWormholes()), wormhole)
 	 */
-	void addWormhole(Wormhole wormhole) {
+	public void addWormhole(Wormhole wormhole) {
 		
 		if (Arrays.asList(arrivalPortals).contains(wormhole.getArrivalPortal()))
 			throw new IllegalArgumentException("The arrival portal is already in the maze's list");
