@@ -1,5 +1,6 @@
 package pacman.wormholes;
 
+import logicalcollections.LogicalSet;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -7,27 +8,39 @@ import pacman.Square;
 
 
 /**
- * @invar | true
  * @invar | getWormholes() != null
- * @invar | getWormholes().stream().allMatch(s -> s != null && s.getDeparturePortal() == this)
+ * @invar | getWormholes().stream().allMatch(s -> s == null || s.getDeparturePortal() == this)
+ * @invar | getSquare() != null
+ * 
  */
 public class DeparturePortal {
 	
-	Square square;
+	private Square square;
 	
 	/**
-	 * @invar | wormholes != null // Phase 1 representation invariant
-	 * @invar | wormholes.stream().allMatch(s -> s != null && s.departurePortal == this) // Phase 2 representation invariant
-	 * @invar | wormholes.stream().allMatch(s -> s.arrivalPortal.square != this.square)
+	 * 
+	 * @invar | wormholes != null 
+	 * @invar | wormholes.stream().allMatch(s -> s != null)
+	 * 
 	 * @representationObject
-	 * @peerObjects
 	 */
-	Set<Wormhole> wormholes = new HashSet<Wormhole>();
+	private Set<Wormhole> wormholes = new HashSet<Wormhole>();
 	
 	/**
 	 * @basic
 	 */
 	public Square getSquare() {return this.square; }
+	
+	/**
+	 * 
+	 * @invar | getWormholesInternal().stream().allMatch(s -> s.getDeparturePortalInternal() == this)
+	 * 
+	 * @post | result != null && result.stream().allMatch(s -> s != null)
+	 * 
+	 * @representationObject
+	 * @peerObjects
+	 */
+	Set<Wormhole> getWormholesInternal() { return Set.copyOf(wormholes); }
 	
 	/**
 	 * @post | result != null
@@ -49,6 +62,19 @@ public class DeparturePortal {
 		if(square == null) { throw new IllegalArgumentException("`square` is null");}
 		
 		this.square = square;
+	}
+	
+	/**
+	* Adds the given student to this team's set of students.
+	*
+	* @throws IllegalArgumentException if {@code wormhole} is null | wormhole == null
+	* 
+	* @mutates | this
+	* @post | getWormholesInternal().equals(LogicalSet.plus(old(getWormholesInternal()), wormhole))
+	*
+	*/
+	void addWormhole(Wormhole wormhole) {
+		wormholes.add(wormhole);
 	}
 
 }
