@@ -9,6 +9,7 @@ import java.util.Set;
 import pacman.wormholes.ArrivalPortal;
 import pacman.wormholes.DeparturePortal;
 import pacman.wormholes.Wormhole;
+import pacman.Ghost;
 
 import logicalcollections.LogicalSet;
 
@@ -125,15 +126,8 @@ public class Maze {
 				return;
 			}
 		}
-	}
-	
-	//Extend method movePacMan so that if PacMan moves onto a departure portal that is currently associated with at least one wormhole, one of these wormholes is picked randomly, 
-	//using random.nextInt(N) where N is the number of wormholes associated with the departure portal. PacMan shall instantaneously move to the wormhole’s arrival portal. 
-	
-	// TODO:
-	//You may assume that a maze does not contain a food item and a portal or two portals (or two food items) on the same square. However, it is possible that there are ghosts 
-	//at the same square as a departure portal or an arrival portal; 
-	//when PacMan travels along a wormhole, he shall be considered to have hit both the ghosts at the departure square and the ghosts at the arrival square.
+	}	
+
 	
 	public void movePacMan(Direction direction) {
 		Square newSquare = pacMan.getSquare().getNeighbor(direction);
@@ -142,10 +136,11 @@ public class Maze {
 			checkFoodItemCollision(newSquare);
 			checkPacManDamage();
 		}
-		
-		
+				
 		if(Arrays.asList(departurePortals).contains(newSquare)){
 			
+			//Ghost newGhost = new Ghost(newGhost.getSquare(), direction);
+
 			Set<Wormhole> wormholePortals = new HashSet<>();
 			
 			for (int i = 0; i< wormholes.toArray().length; i++){
@@ -153,12 +148,15 @@ public class Maze {
 					wormholePortals.add((Wormhole) wormholes.toArray()[i]);
 				}
 			
-
-			
 			int index = random.nextInt(wormholePortals.toArray().length);
 			pacMan.setSquare(((Wormhole) wormholes.toArray()[index]).getArrivalPortal().getSquare());
+			
+			checkPacManDamage();
+
+		}
 		
-	}
+		
+		
 	}
 	
 }
