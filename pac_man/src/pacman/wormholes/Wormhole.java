@@ -12,25 +12,34 @@ import logicalcollections.LogicalSet;
 public class Wormhole {
 	
 	/**
-	 * @invar | true  // Phase 1 representation invariant
-	 * @invar | departurePortal != null && departurePortal.wormholes.contains(this) // Phase 2 representation invariant
-	 * @invar | departurePortal.square != arrivalPortal.square
-	 * 
-	 * @peerObject
 	 * @representationObject
 	 */
-	DeparturePortal departurePortal;
+	private DeparturePortal departurePortal;
 	
 	/**
-	 * @invar | true  // Phase 1 representation invariant
-	 * @invar | arrivalPortal != null && arrivalPortal.wormholes.contains(this) // Phase 2 representation invariant
-	 * @invar | departurePortal.square != arrivalPortal.square
+	 * @representationObject
+	 */
+	private ArrivalPortal arrivalPortal;
+	
+	/**
+	 *
+	 * @invar | getArrivalPortalInternal() == null || getArrivalPortalInternal().getWormholesInternal().contains(this) 
+	 * 
 	 * 
 	 * @peerObject
 	 * @representationObject
 	 */
-	ArrivalPortal arrivalPortal;
+	ArrivalPortal getArrivalPortalInternal() {return this.arrivalPortal;}
 	
+	
+	/**
+	 * 
+	 * @invar | getDeparturePortalInternal() == null || getDeparturePortalInternal().getWormholesInternal().contains(this) 
+	 * 
+	 * 
+	 * @peerObject
+	 */
+	DeparturePortal getDeparturePortalInternal() {return this.departurePortal;}
 	
 	/**
 	 * 
@@ -60,16 +69,16 @@ public class Wormhole {
 		if (newDeparturePortal.getSquare().equals(arrivalPortal.getSquare())) { 
 			throw new IllegalArgumentException("`departurePortal` and `arrivalPortal` have the same placement");}
 		this.departurePortal = newDeparturePortal;
-		newDeparturePortal.wormholes.add(this);
+		newDeparturePortal.addWormhole(this);
 	}
 	
-	//@post | newArrivalPortal.getWormholes().equals(LogicalSet.plus(old(newArrivalPortal.getWormholes()), this)) 
+
 	/**
 	 * 
 	 * @throws IllegalArgumentExeption | newArrivalPortal != null
 	 * @throws IllegalArgumetException | newArrivalPortal.getSquare().equals(getDeparturePortal().getSquare())
 	 * @post | getArrivalPortal().equals(newArrivalPortal)
-	 * 
+	 * @post | newArrivalPortal.getWormholes().equals(LogicalSet.plus(old(newArrivalPortal.getWormholes()), this)) 
 	 * 
 	 * @mutates | this, newArrivalPortal
 	 * @mutates_properties | getArrivalPortal(), newArrivalPortal.getWormholes()
@@ -79,7 +88,7 @@ public class Wormhole {
 		if (newArrivalPortal.getSquare().equals(departurePortal.getSquare())) { 
 			throw new IllegalArgumentException("`departurePortal` and `arrivalPortal` have the same placement");}
 		
-		newArrivalPortal.wormholes.add(this);
+		newArrivalPortal.addWormhole(this);
 		this.arrivalPortal = newArrivalPortal;
 		
 	}
@@ -109,10 +118,9 @@ public class Wormhole {
 		
 		this.arrivalPortal = arrivalPortal;
 		this.departurePortal = departurePortal;
-		arrivalPortal.wormholes.add(this);
-		departurePortal.wormholes.add(this);
+		arrivalPortal.addWormhole(this);
+		departurePortal.addWormhole(this);
 	}
-	
-	
+
 
 }
