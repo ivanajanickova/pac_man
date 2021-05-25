@@ -1,8 +1,11 @@
 package pacman;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Optional;
 import java.util.Random;
 import java.util.Set;
 
@@ -23,11 +26,8 @@ public class Maze {
 	private FoodItem[] foodItems;
 	private ArrivalPortal[] arrivalPortals;
 	private DeparturePortal[] departurePortals;
+	private Wormhole[] wormholes;
 	
-	/**
-	 * @representationObject
-	 */
-	private Set<Wormhole> wormholes = new HashSet<Wormhole>();
 
 	public MazeMap getMap() { return map; }
 	
@@ -41,41 +41,40 @@ public class Maze {
 	 * @basic
 	 * @creates | result
 	 */
+	public DeparturePortal[] getDeparturePortals() { return this.departurePortals; }
 	
-	public DeparturePortal[] getDeparturePortals() { 
-		Arrays.sort(departurePortals);
-		return departurePortals.clone();
+	
+	/**
+	 * @basic
+	 * @creates | result
+	 */
+	public ArrivalPortal[] getArrivalPortals() { return this.arrivalPortals;	}
+	
+	
+	/**
+	 * @basic
+	 * @creates | result
+	 */
+	
+	public Wormhole[] getWormholes() { return wormholes.clone();}
+	
+	
+	public void addWormhole(Wormhole wormhole) {
+		if (Arrays.asList(arrivalPortals).contains(wormhole.getArrivalPortal()) == false|| 
+				Arrays.asList(departurePortals).contains(wormhole.getDeparturePortal()) == false) {
 		}
-	/**
-	 * @basic
-	 * @creates | result
-	 */
-	public ArrivalPortal[] getArrivalPortals() {
-		Arrays.sort(departurePortals);
-		return arrivalPortals.clone();}
+		else {
+			if (wormholes == null ) { this.wormholes = new Wormhole[] {wormhole}; }
+			else {
+				Wormhole[] newWormholes = new Wormhole[wormholes.length + 1];
+				for(int i = 0; i < wormholes.length; i++) {
+					newWormholes[i] = wormholes[i];
+				}
+				newWormholes[newWormholes.length - 1] = wormhole;
+				this.wormholes = newWormholes;
+			}
+		} 
 		
-	/**
-	 * @basic
-	 * @creates | result
-	 */
-	
-	public Set<Wormhole> getWormholes(){ return Set.copyOf(wormholes); } 
-		
-	/**
-	 * @throws IllegalArgumentException | Arrays.asList(arrivalPortals).contains(wormhole.getArrivalPortal())
-	 * @throws IllegalArgumentException | Arrays.asList(departurePortals).contains(wormhole.getDeparturePortal())
-	 * @mutates | this
-	 * @post | getWormholes().equals(LogicalSet.plus(old(getWormholes()), wormhole)
-	 */
-	void addWormhole(Wormhole wormhole) {
-		
-		if (Arrays.asList(arrivalPortals).contains(wormhole.getArrivalPortal()))
-			throw new IllegalArgumentException("The arrival portal is already in the maze's list");
-		
-		if (Arrays.asList(departurePortals).contains(wormhole.getDeparturePortal()))
-			throw new IllegalArgumentException("The departure portal is already in the maze's list");
-		
-		wormholes.add(wormhole);
 	}
 	
 	public Maze(Random random, MazeMap map, PacMan pacMan, Ghost[] ghosts, FoodItem[] foodItems, 
@@ -85,8 +84,8 @@ public class Maze {
 		this.pacMan = pacMan;
 		this.ghosts = ghosts.clone();
 		this.foodItems = foodItems.clone();
-		this.arrivalPortals = arrivalPortals.clone(); //clone?
-		this.departurePortals = departurePortals.clone(); //clone?
+		this.arrivalPortals = arrivalPortals.clone();
+		this.departurePortals = departurePortals.clone();
 	}
 	
 	public boolean isCompleted() {
@@ -126,15 +125,7 @@ public class Maze {
 			}
 		}
 	}
-	
-	//Extend method movePacMan so that if PacMan moves onto a departure portal that is currently associated with at least one wormhole, one of these wormholes is picked randomly, 
-	//using random.nextInt(N) where N is the number of wormholes associated with the departure portal. PacMan shall instantaneously move to the wormhole’s arrival portal. 
-	
-	// TODO:
-	//You may assume that a maze does not contain a food item and a portal or two portals (or two food items) on the same square. However, it is possible that there are ghosts 
-	//at the same square as a departure portal or an arrival portal; 
-	//when PacMan travels along a wormhole, he shall be considered to have hit both the ghosts at the departure square and the ghosts at the arrival square.
-	
+
 	public void movePacMan(Direction direction) {
 		Square newSquare = pacMan.getSquare().getNeighbor(direction);
 		if (newSquare.isPassable()) {
@@ -143,22 +134,20 @@ public class Maze {
 			checkPacManDamage();
 		}
 		
+		DeparturePortal portal = Arrays.stream(departurePortals)
+				.filter(s -> s.getSquare().equals(newSquare) && s.getWormholes() != null)
+				.findFirst()
+				.orElse(null);
 		
-		if(Arrays.asList(departurePortals).contains(newSquare)){
-			
-			Set<Wormhole> wormholePortals = new HashSet<>();
-			
-			for (int i = 0; i< wormholes.toArray().length; i++){
-				if (((Wormhole) wormholes.toArray()[i]).getDeparturePortal().equals(newSquare))
-					wormholePortals.add((Wormhole) wormholes.toArray()[i]);
-				}
-			
-
-			
-			int index = random.nextInt(wormholePortals.toArray().length);
-			pacMan.setSquare(((Wormhole) wormholes.toArray()[index]).getArrivalPortal().getSquare());
-		
-	}
+		if(portal != null) {
+			int index = random.nextInt(portal.getWormholes().size());
+			System.out.println(portal.getWormholes().size());
+			System.out.println(index);
+			Square nextSquare = ((Wormhole) portal.getWormholes().toArray()[index]).getArrivalPortal().getSquare();
+			pacMan.setSquare(nextSquare);
+			checkPacManDamage();
+	
+		}	
 	}
 	
 }
