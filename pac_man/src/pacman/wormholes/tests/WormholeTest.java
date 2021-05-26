@@ -23,11 +23,16 @@ class WormholeTest {
 		DeparturePortal depPort = new DeparturePortal(Square.of(mazeMap, 1, 2));
 		ArrivalPortal arrPort = new ArrivalPortal(Square.of(mazeMap, 1, 3));
 		Wormhole wormhole = new Wormhole(depPort, arrPort);
+		
 		assertEquals(depPort, wormhole.getDeparturePortal());
 		assertEquals(arrPort, wormhole.getArrivalPortal());
+		
 		assertEquals(true, depPort.getWormholes().stream().allMatch(s -> s.equals(wormhole)));
-		Wormhole wormhole2 = new Wormhole(depPort, arrPort);
-		assertEquals(true, depPort.getWormholes().stream().allMatch(s -> (DeparturePortal) s.getDeparturePortal() == depPort));
+		assertEquals(true, arrPort.getWormholes().stream().allMatch(s -> s.equals(wormhole)));
+		
+		assertEquals(true, depPort.getWormholes().stream().allMatch(s -> s.getDeparturePortal().equals(depPort)));
+		assertEquals(true, arrPort.getWormholes().stream().allMatch(s -> s.getDeparturePortal().equals(arrPort)));
+
 
 		DeparturePortal depPort2 = new DeparturePortal(Square.of(mazeMap, 1, 1));	
 		wormhole.setDeparturePortal(depPort2);
