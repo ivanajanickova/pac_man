@@ -74,13 +74,16 @@ public class ArrivalPortal {
 	* Adds the given student to this team's set of students.
 	*
 	* @throws IllegalArgumentException if {@code wormhole} is null | wormhole == null
-	* 
 	* @mutates | this
 	* @post | getWormholesInternal().equals(LogicalSet.plus(old(getWormholesInternal()), wormhole))
 	*
 	*/
 	void addWormhole(Wormhole wormhole) {
+		if(wormhole == null) {
+			throw new IllegalArgumentException("wormhole is null");
+		}
 		wormholes.add(wormhole);
+	
 	}
 
 
