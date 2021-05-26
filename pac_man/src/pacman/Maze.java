@@ -41,14 +41,14 @@ public class Maze {
 	 * @basic
 	 * @creates | result
 	 */
-	public DeparturePortal[] getDeparturePortals() { return this.departurePortals; }
+	public DeparturePortal[] getDeparturePortals() { return this.departurePortals.clone(); }
 	
 	
 	/**
 	 * @basic
 	 * @creates | result
 	 */
-	public ArrivalPortal[] getArrivalPortals() { return this.arrivalPortals;	}
+	public ArrivalPortal[] getArrivalPortals() { return this.arrivalPortals.clone();}
 	
 	
 	/**
@@ -62,9 +62,12 @@ public class Maze {
 	public void addWormhole(Wormhole wormhole) {
 		if (Arrays.asList(arrivalPortals).contains(wormhole.getArrivalPortal()) == false|| 
 				Arrays.asList(departurePortals).contains(wormhole.getDeparturePortal()) == false) {
+			throw new IllegalArgumentException("The wormhole is not valid.");
 		}
 		else {
-			if (wormholes == null ) { this.wormholes = new Wormhole[] {wormhole}; }
+			if (wormholes == null ) { 
+				this.wormholes = new Wormhole[] {wormhole}; 
+				}
 			else {
 				Wormhole[] newWormholes = new Wormhole[wormholes.length + 1];
 				for(int i = 0; i < wormholes.length; i++) {
@@ -133,21 +136,18 @@ public class Maze {
 			checkFoodItemCollision(newSquare);
 			checkPacManDamage();
 		}
-		
-		DeparturePortal portal = Arrays.stream(departurePortals)
-				.filter(s -> s.getSquare().equals(newSquare) && s.getWormholes() != null)
+			
+		 DeparturePortal portal = Arrays.stream(departurePortals)
+				.filter(s -> s.getSquare().equals(newSquare) && s.getWormholes().size () != 0)
 				.findFirst()
 				.orElse(null);
 		
 		if(portal != null) {
 			int index = random.nextInt(portal.getWormholes().size());
-			System.out.println(portal.getWormholes().size());
-			System.out.println(index);
 			Square nextSquare = ((Wormhole) portal.getWormholes().toArray()[index]).getArrivalPortal().getSquare();
 			pacMan.setSquare(nextSquare);
-			checkPacManDamage();
-	
-		}	
+			checkPacManDamage(); 
+		 }
 	}
 	
 }

@@ -74,6 +74,9 @@ public class DeparturePortal {
 	*
 	*/
 	void addWormhole(Wormhole wormhole) {
+		if(wormhole == null) {
+			throw new IllegalArgumentException("wormhole is null");
+		}
 		wormholes.add(wormhole);
 	}
 
