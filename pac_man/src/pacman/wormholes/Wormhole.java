@@ -11,14 +11,8 @@ import logicalcollections.LogicalSet;
  */
 public class Wormhole {
 	
-	/**
-	 * @representationObject
-	 */
 	private DeparturePortal departurePortal;
 	
-	/**
-	 * @representationObject
-	 */
 	private ArrivalPortal arrivalPortal;
 	
 	/**
@@ -38,18 +32,19 @@ public class Wormhole {
 	 * 
 	 * 
 	 * @peerObject
+	 * @representationObject
 	 */
 	DeparturePortal getDeparturePortalInternal() {return this.departurePortal;}
 	
 	/**
-	 * 
+	 * @peerObject
 	 * @basic
 	 */
 	public DeparturePortal getDeparturePortal() { return departurePortal;}
 	
 	
 	/**
-	 * 
+	 * @peerObject
 	 * @basic
 	 */
 	public ArrivalPortal getArrivalPortal() {return arrivalPortal; }
@@ -57,19 +52,24 @@ public class Wormhole {
 	/**
 	 * 
 	 * @throws IllegalArgumentExeption | newDeparturePortal != null
-	 * @throws IllegalArgumentExeption | newDeparturePortal.getSquare().equals(getArrivalPortal().getSquare())
 	 * @throws IllegalArgumetException | newDeparturePortal.getSquare().equals(getArrivalPortal().getSquare())
-	 * @post | getDeparturePortal().equals(newDeparturePortal)
-	 * @post | newDeparturePortal.getWormholes().equals(LogicalSet.plus(old(newDeparturePortal.getWormholes()), this)) 
 	 * 
+	 * @post | getDeparturePortal().equals(newDeparturePortal)
+	 * @post | newDeparturePortal != old(getDeparturePortal()) ? 
+	 * 		 |		newDeparturePortal.getWormholes().equals(LogicalSet.plus(old(newDeparturePortal.getWormholes()), this)) :
+	 *       | 		newDeparturePortal.getWormholes().equals(old(newDeparturePortal.getWormholes()))
+	 * 
+	 * @inspects | newDeparturePortal
 	 * @mutates | this, newDeparturePortal
-	 * @mutates_properties | getArrivalPortal(), newDeparturePortal.getWormholes()
+	 * @mutates_properties | getDeparturePortal(), getDeparturePortal().getWormholes(), newDeparturePortal.getWormholes()
 	 */
 	public void setDeparturePortal(DeparturePortal newDeparturePortal) {
 		if (newDeparturePortal == null) { throw new IllegalArgumentException("`newDeparturePortal` is null");}
-		if (newDeparturePortal.getSquare().equals(getArrivalPortal().getSquare())) {throw new IllegalArgumentException("newDeparturePortal` is already added");}
+		if (newDeparturePortal == getDeparturePortal()) {throw new IllegalArgumentException("newDeparturePortal` is the same as current");}
 		if (newDeparturePortal.getSquare().equals(arrivalPortal.getSquare())) { 
 			throw new IllegalArgumentException("`departurePortal` and `arrivalPortal` have the same placement");}
+		
+		this.departurePortal.removeWormhole(this);
 		this.departurePortal = newDeparturePortal;
 		newDeparturePortal.addWormhole(this);
 	}
@@ -78,23 +78,25 @@ public class Wormhole {
 	/**
 	 * 
 	 * @throws IllegalArgumentExeption | newArrivalPortal != null
-	 * @throws IllegalArgumentExeption | newArrivalPortal.getSquare().equals(getArrivalPortal().getSquare())
 	 * @throws IllegalArgumetException | newArrivalPortal.getSquare().equals(getDeparturePortal().getSquare())
-	 * @post | getArrivalPortal().equals(newArrivalPortal)
-	 * @post | newArrivalPortal.getWormholes().equals(LogicalSet.plus(old(newArrivalPortal.getWormholes()), this)) 
 	 * 
+	 * @post | getArrivalPortal().equals(newArrivalPortal)
+	 * @post | newArrivalPortal != old(getArrivalPortal()) ? 
+	 * 		 |		newArrivalPortal.getWormholes().equals(LogicalSet.plus(old(newArrivalPortal.getWormholes()), this)) :
+	 *       | 		newArrivalPortal.getWormholes().equals(old(newArrivalPortal.getWormholes()))
+	 * 
+	 * @inspects | newArrivalPortal
 	 * @mutates | this, newArrivalPortal
-	 * @mutates_properties | getArrivalPortal(), newArrivalPortal.getWormholes()
+	 * @mutates_properties | getArrivalPortal(), getArrivalPortal().getWormholes(), newArrivalPortal.getWormholes()
 	 */
 	public void setArrivalPortal(ArrivalPortal newArrivalPortal) {
 		if (newArrivalPortal == null) { throw new IllegalArgumentException("newArrivalPortal` is null");}
-		if (newArrivalPortal.getSquare().equals(getArrivalPortal().getSquare())) { throw new IllegalArgumentException("newArrivalPortal` is already added"); }
 		if (newArrivalPortal.getSquare().equals(departurePortal.getSquare())) { 
 			throw new IllegalArgumentException("`departurePortal` and `arrivalPortal` have the same placement");}
 		
-		newArrivalPortal.addWormhole(this);
+		this.arrivalPortal.removeWormhole(this);
 		this.arrivalPortal = newArrivalPortal;
-		
+		newArrivalPortal.addWormhole(this);	
 	}
 	
 	
@@ -117,12 +119,12 @@ public class Wormhole {
 		if (departurePortal == null) { throw new IllegalArgumentException("`departurePortal` is null");}
 		if (arrivalPortal == null) { throw new IllegalArgumentException("`arrivalPortal` is null");}
 		
-		departurePortal.addWormhole(this);
-		arrivalPortal.addWormhole(this);
 		this.arrivalPortal = arrivalPortal;
 		this.departurePortal = departurePortal;
-
 		
+		departurePortal.addWormhole(this);
+		arrivalPortal.addWormhole(this);
+				
 	}
 
 
