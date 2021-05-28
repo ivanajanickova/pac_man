@@ -34,9 +34,10 @@ class WormholeTest {
 		
 		ArrivalPortal arrPort2 = new ArrivalPortal(Square.of(mazeMap, 0, 3));
 		wormhole.setArrivalPortal(arrPort2);
+		wormhole.setArrivalPortal(arrPort2);
 		assertEquals(arrPort2, wormhole.getArrivalPortal());
 		
-		Wormhole wormhole2 = new Wormhole(depPort2, new ArrivalPortal(Square.of(mazeMap, 1, 3)));
+		Wormhole wormhole2 = new Wormhole(depPort2, arrPort2);
 
 		
 		

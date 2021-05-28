@@ -22,7 +22,7 @@ public class ArrivalPortal {
 	
 	/**
 	 * 
-	 * @invar | wormholes != null // Phase 1 representation invariant
+	 * @invar | wormholes != null 
 	 * @invar | wormholes.stream().allMatch(s -> s != null)
 	 * 
 	 * @representationObject
@@ -35,7 +35,7 @@ public class ArrivalPortal {
 	 * 
 	 * 
 	 * @post | result != null && result.stream().allMatch(s -> s != null)
-	 * 
+	 * @creates | result
 	 * @representationObject
 	 * @peerObjects
 	 */
@@ -48,7 +48,7 @@ public class ArrivalPortal {
 	
 	
 	/**
-	 * @post | result != null
+	 * @post | result != null && result.stream().allMatch(s -> s != null)
 	 * @basic
 	 * @creates | result
 	 * @peerObjects
@@ -73,9 +73,10 @@ public class ArrivalPortal {
 	/**
 	* Adds the given student to this team's set of students.
 	*
-	* @throws IllegalArgumentException if {@code wormhole} is null | wormhole == null
+	* @throws IllegalArgumentException | wormhole == null
 	* @mutates | this
-	* @post | getWormholesInternal().equals(LogicalSet.plus(old(getWormholesInternal()), wormhole))
+	* @mutates_properties | getWormholes(), getWormholesInternal()
+	* @post | getWormholesInternal().equals(LogicalSet.plus(old(getWormholesInternal()), wormhole)) //if the wormhole is already added this would still hold as `wormholes` is a SET
 	*
 	*/
 	void addWormhole(Wormhole wormhole) {
@@ -85,6 +86,24 @@ public class ArrivalPortal {
 		wormholes.add(wormhole);
 	
 	}
+	
+	/**
+	* Adds the given student to this team's set of students.
+	*
+	* @throws IllegalArgumentException if {@code wormhole} is null | wormhole == null
+	* 
+	* @mutates | this
+	* @mutates_properties | getWormholes(), getWormholesInternal()
+	* @post | getWormholesInternal().equals(LogicalSet.minus(old(getWormholesInternal()), wormhole))
+	*
+	*/
+	void removeWormhole(Wormhole wormhole) {
+		if(wormhole == null) {
+			throw new IllegalArgumentException("wormhole is null");
+		}
+		wormholes.remove(wormhole);
+	}
+
 
 
 }
